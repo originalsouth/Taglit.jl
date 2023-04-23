@@ -2,3 +2,9 @@ name = "Taglit"
 uuid = "b7a0cd98-8e85-4224-9650-5ebc6323ae85"
 authors = ["Benny <mail2benny+github@gmail.com>"]
 version = "0.1.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
