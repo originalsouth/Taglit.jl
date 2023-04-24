@@ -15,8 +15,10 @@ Feel free to reuse and contribute, pull requests are very welcome!
 This code is (and forever will be) a work in progress.
 
 Taglit.jl is a quick implementation of a multi label hash map that does an intersection search on the labels when looking up values.
-If that does not make sense go to the test section to see some easy examples, if it does not make sense you probably not looking for this data structure.
-It is implement in Julia and does not use any dependencies other than the Julia standard library.
+This means it implements a data structure that allows multiple tags to be associated with each object it stores.
+When looking up an object by the desired tags an intersection operation is performed to find objects that solely tagged by all desired tags.
+If that does not make sense go to the test section to see some easy examples, if it still does not make sense you probably not in need of this data structure.
+Taglit.jl is implement in Julia and does not use any dependencies other than the Julia standard library.
 
 ### Acknowledgements
 * [chickenLags](https://github.com/chickenLags) for motivating me to write this
