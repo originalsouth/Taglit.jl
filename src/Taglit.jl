@@ -78,8 +78,8 @@ Base.push!(tagmap::Tagmap, value::T, args::U...) where {T, U} = push!(tagmap, Ob
 Base.push!(tagmap::Tagmap, value::T, args::Vector{U} = referencetype(tagmap)[]) where {T, U} = push!(tagmap, Object(value, Set(args)))
 
 function Base.getindex(tagmap::Tagmap, args::Set{U}) where U
-    targets = [references(tagmap)[arg] for arg in args]
-    return isempty(targets) ? empty(values[tagmap]) : data.([objects(tagmap)[target] for target in intersect(targets...)])
+    targets = [references(tagmap)[arg] for arg in filter(x -> haskey(references(tagmap), x), args)]
+    return isempty(targets) ? empty(values(tagmap)) : data.([objects(tagmap)[target] for target in intersect(targets...)])
 end
 Base.getindex(tagmap::Tagmap, args::Vector{U} = referencetype(tagmap)[]) where U = getindex(tagmap, Set{U}(args))
 Base.getindex(tagmap::Tagmap, args::U...) where U = getindex(tagmap, Set{U}([args...]))

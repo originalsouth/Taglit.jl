@@ -32,9 +32,13 @@ end
     @test references(tagmap, "User 2") == Set(["Programmer", "Single", "Dumb"])
     @test length(tagmap["Programmer"]) == 2
     @test length(tagmap["Father"]) == 1
+    @test length(tagmap["Potato"]) == 0
     push!(tagmap, "User 2", "Programmer", "Father", "Dumb")
     @test references(tagmap, "User 2") == Set(["Programmer", "Father", "Dumb"])
     @test length(tagmap["Father"]) == 2
+    @test length(tagmap["Smart"]) == 1
+    @test length(tagmap["Dumb"]) == 1
+    @test length(tagmap["Potato"]) == 0
 end
 
 @testset "Two Value Symbols" begin
