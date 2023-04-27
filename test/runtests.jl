@@ -41,7 +41,7 @@ end
     @test length(tagmap["Potato"]) == 0
 end
 
-@testset "Two Value Symbols" begin
+@testset "Two Symbols" begin
     tagmap = Tagmap(Symbol, Symbol)
     @test length(tagmap) == 0
     push!(tagmap, :User1, :Programmer, :Father, :Smart)
@@ -90,7 +90,7 @@ end
         push!(tagmap, object, rand(rg, utags, rand(rg, 1:M)))
     end
     @test length(tagmap) == N
-    for lookup in rand(rg, reduce(vcat, collect(Iterators.product(utags, utags))), L)
+    for lookup in rand(rg, reduce(vcat, Iterators.product(utags, utags)), L)
         @test tagmap[lookup...] == tagmap[Set([lookup...])]
     end
     @test length(tagmap) == N

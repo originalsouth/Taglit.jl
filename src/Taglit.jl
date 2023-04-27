@@ -38,7 +38,7 @@ function Base.show(io::IO, ::MIME"text/plain", tagmap::Tagmap{T, U}) where {T, U
     end
 end
 
-function Base.push!(tagmap::Tagmap, value::Object)
+function Base.push!(tagmap::Tagmap{T, U}, value::Object{T, U}) where {T, U}
     k = key(value)
     if haskey(objects(tagmap), k)
         for reference in setdiff(references(value), references(objects(tagmap)[k]))
@@ -73,15 +73,15 @@ function Base.push!(tagmap::Tagmap, value::Object)
     end
     return tagmap
 end
-Base.push!(tagmap::Tagmap, value::T, args::Set{U}) where {T, U} = push!(tagmap, Object{T, U}(value, args))
-Base.push!(tagmap::Tagmap, value::T, args::U...) where {T, U} = push!(tagmap, Object(value, Set{U}([args...])))
-Base.push!(tagmap::Tagmap, value::T, args::Vector{U} = referencetype(tagmap)[]) where {T, U} = push!(tagmap, Object(value, Set(args)))
+Base.push!(tagmap::Tagmap{T, U}, value::T, args::Set{U}) where {T, U} = push!(tagmap, Object{T, U}(value, args))
+Base.push!(tagmap::Tagmap{T, U}, value::T, args::U...) where {T, U} = push!(tagmap, Object(value, Set{U}(args)))
+Base.push!(tagmap::Tagmap{T, U}, value::T, args::Vector{U} = U[]) where {T, U} = push!(tagmap, Object(value, Set{U}(args)))
 
-function Base.getindex(tagmap::Tagmap, args::Set{U}) where U
+function Base.getindex(tagmap::Tagmap{T, U}, args::Set{U}) where {T, U}
     targets = [references(tagmap)[arg] for arg in filter(x -> haskey(references(tagmap), x), args)]
     return isempty(targets) ? empty(values(tagmap)) : data.([objects(tagmap)[target] for target in intersect(targets...)])
 end
-Base.getindex(tagmap::Tagmap, args::Vector{U} = referencetype(tagmap)[]) where U = getindex(tagmap, Set{U}(args))
-Base.getindex(tagmap::Tagmap, args::U...) where U = getindex(tagmap, Set{U}([args...]))
+Base.getindex(tagmap::Tagmap{T, U}, args::Vector{U} = U[]) where {T, U} = getindex(tagmap, Set{U}(args))
+Base.getindex(tagmap::Tagmap{T, U}, args::U...) where {T, U} = getindex(tagmap, Set{U}([args...]))
 
 end
