@@ -45,7 +45,7 @@ function Base.push!(tagmap::Tagmap{T, U}, value::Object{T, U}) where {T, U}
             if haskey(tagmap.references, reference)
                 push!(tagmap.references[reference], k)
             else
-                push!(tagmap.references, reference => Set(k))
+                push!(tagmap.references, reference => Set{UInt}(k))
             end
         end
         for reference in setdiff(references(objects(tagmap)[k]), references(value))
@@ -66,7 +66,7 @@ function Base.push!(tagmap::Tagmap{T, U}, value::Object{T, U}) where {T, U}
                 if haskey(tagmap.references, reference)
                     push!(tagmap.references[reference], k)
                 else
-                    push!(tagmap.references, reference => Set(k))
+                    push!(tagmap.references, reference => Set{UInt}(k))
                 end
             end
         end
@@ -79,7 +79,7 @@ Base.push!(tagmap::Tagmap{T, U}, value::T, args::Vector{U} = U[]) where {T, U} =
 
 function Base.getindex(tagmap::Tagmap{T, U}, args::Set{U}) where {T, U}
     targets = [references(tagmap)[arg] for arg in filter(x -> haskey(references(tagmap), x), args)]
-    return isempty(targets) ? empty(values(tagmap)) : data.([objects(tagmap)[target] for target in intersect(targets...)])
+    return isempty(targets) ? T[] : map(x -> data(objects(tagmap)[x]), collect(reduce(∩, targets)))
 end
 Base.getindex(tagmap::Tagmap{T, U}, args::Vector{U} = U[]) where {T, U} = getindex(tagmap, Set{U}(args))
 Base.getindex(tagmap::Tagmap{T, U}, args::U...) where {T, U} = getindex(tagmap, Set{U}([args...]))
